@@ -99,6 +99,11 @@ else
   exit 2
 fi
 
+MINE_FUNCTIONS_NETWORK_INTERFACE="eth0"
+if [ "x$mine_functions_network_ip_addrs$" != "x" ]; then
+  MINE_FUNCTIONS_NETWORK_INTERFACE="$mine_functions_network_ip_addrs$"
+fi
+
 # Push pillar config into platform-salt for environment specific config
 cat << EOF >> /srv/salt/platform-salt/pillar/env_parameters.sls
 os_user: '$os_user$'
@@ -136,7 +141,9 @@ hadoop.distro: '$hadoop_distro$'
 hdp:
   hdp_core_stack_repo: '$pnda_mirror$/mirror_hdp/HDP/$HDP_OS/'
   hdp_utils_stack_repo: '$pnda_mirror$/mirror_hdp/HDP-UTILS-1.1.0.21/repos/$HDP_OS/'
-
+mine_functions:
+  network.ip_addrs: [$MINE_FUNCTIONS_NETWORK_INTERFACE]
+  grains.items: []
 EOF
 
 if [ "x$ntp_servers$" != "x" ] ; then
